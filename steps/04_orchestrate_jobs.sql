@@ -1,5 +1,5 @@
 use role accountadmin;
-use schema quickstart_prod.gold;
+use schema quickstart_{{environment}}.gold;
 
 
 -- declarative target table of pipeline
@@ -16,7 +16,7 @@ create or alter table vacation_spots (
   , aquarium_cnt int
   , zoo_cnt int
   , korean_restaurant_cnt int
-) data_retention_time_in_days = 1;
+) data_retention_time_in_days = {{retention_time}};
 
 
 -- task to merge pipeline results into target table
@@ -91,7 +91,7 @@ create or alter task email_notification
       Explain your choise, offer a short description of the location and provide tips on what to pack for the vacation considering the weather conditions? 
       Finally, could you provide a detailed plan of daily activities for a one week long vacation covering the highlights of the chosen destination?\n\n';
       
-      let response varchar := (SELECT SNOWFLAKE.CORTEX.COMPLETE('mistral-7b', :query || :options));
+      -- let response varchar := (SELECT SNOWFLAKE.CORTEX.COMPLETE('mistral-7b', :query || :options));
 
       CALL SYSTEM$SEND_EMAIL(
         'email_integration',
